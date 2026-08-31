@@ -318,7 +318,8 @@ void fe_port_wifi_ip(char *out, size_t outlen) {
 }
 
 int fe_port_tcp_connect(const char *host, uint16_t port) {
-    // TODO: 接入 lwIP socket API（axi_ethernet + lwIP 2023.x）
+    // REQUIRED_PORT_HOOK: 接入 lwIP socket API（axi_ethernet + lwIP 2023.x）
+    // MicroBlaze 侧尚未挂载 lwIP 协议栈；返回 -1 表示暂时无网络。
     (void)host; (void)port;
     return -1;
 }
