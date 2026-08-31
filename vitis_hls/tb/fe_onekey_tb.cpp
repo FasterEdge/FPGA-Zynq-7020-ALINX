@@ -59,6 +59,23 @@ int main() {
             "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad");
     }
 
+    // Oversized input must be safely and deterministically bounded to the
+    // documented 128-byte HLS interface limit (previously this read past buf).
+    {
+        uint8_t key[16]; memset(key, 0x3c, sizeof(key));
+        uint8_t long_msg[129];
+        for (int i = 0; i < 129; i++) long_msg[i] = (uint8_t)i;
+        uint8_t mac_long[32], mac_128[32];
+        fe_hmac_sha256(key, sizeof(key), long_msg, sizeof(long_msg), mac_long);
+        fe_hmac_sha256(key, sizeof(key), long_msg, 128, mac_128);
+        if (memcmp(mac_long, mac_128, sizeof(mac_long)) != 0) {
+            printf("FAIL oversized HMAC input was not bounded to 128 bytes\n");
+            errors++;
+        } else {
+            printf("PASS oversized HMAC input safely bounded\n");
+        }
+    }
+
     // OneKey issue / verify 往返
     {
         uint8_t secret[33];

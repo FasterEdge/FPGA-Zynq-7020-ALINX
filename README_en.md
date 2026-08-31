@@ -96,7 +96,7 @@ data_NetMapData get node1
 
 ### 5. Version
 
-- **1.0.20260829** (in sync with all FasterEdge MCU platform versions)
+- **1.0.20260831** (in sync with all FasterEdge MCU platform versions)
 
 ### 6. Sibling Projects
 

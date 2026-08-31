@@ -57,6 +57,34 @@ module tb_fe_axi_config_kv;
         end
     endtask
 
+    // Exercise legal AXI4-Lite behavior where address and data arrive in
+    // different cycles.  A slave must not require both VALID signals together.
+    task axi_write_split(input [11:0] addr, input [31:0] data, input integer address_first);
+        begin
+            if (address_first) begin
+                @(posedge aclk);
+                awaddr <= addr; awvalid <= 1;
+                while (!awready) @(posedge aclk);
+                @(posedge aclk); awvalid <= 0;
+                repeat (2) @(posedge aclk);
+                wdata <= data; wstrb <= 4'hF; wvalid <= 1;
+                while (!wready) @(posedge aclk);
+                @(posedge aclk); wvalid <= 0;
+            end else begin
+                @(posedge aclk);
+                wdata <= data; wstrb <= 4'hF; wvalid <= 1;
+                while (!wready) @(posedge aclk);
+                @(posedge aclk); wvalid <= 0;
+                repeat (2) @(posedge aclk);
+                awaddr <= addr; awvalid <= 1;
+                while (!awready) @(posedge aclk);
+                @(posedge aclk); awvalid <= 0;
+            end
+            while (!bvalid) @(posedge aclk);
+            @(posedge aclk);
+        end
+    endtask
+
     task axi_read(input [11:0] addr, output [31:0] data);
         begin
             @(posedge aclk);
@@ -107,11 +135,19 @@ module tb_fe_axi_config_kv;
         axi_read(12'h040, rd);
         if (rd !== 32'h12345678) begin $display("FAIL: slot1 write/read"); errors = errors + 1; end
 
-        // 4) 越界地址（>=1KB）读应为 0
+        // 4) AW/W 分周期到达，地址先到与数据先到都必须成功
+        axi_write_split(12'h080, 32'hA5A55A5A, 1);
+        axi_read(12'h080, rd);
+        if (rd !== 32'hA5A55A5A) begin $display("FAIL: split AW-first write/read"); errors = errors + 1; end
+        axi_write_split(12'h084, 32'h55AA33CC, 0);
+        axi_read(12'h084, rd);
+        if (rd !== 32'h55AA33CC) begin $display("FAIL: split W-first write/read"); errors = errors + 1; end
+
+        // 5) 越界地址（>=1KB）读应为 0
         axi_read(12'h400, rd);
         if (rd !== 32'h0) begin $display("FAIL: oob read = %h", rd); errors = errors + 1; end
 
-        // 5) 清除槽位 0（写 0 模拟 delete）
+        // 6) 清除槽位 0（写 0 模拟 delete）
         axi_write(12'h000, 32'h0);
         axi_read(12'h000, rd);
         if (rd !== 32'h0) begin $display("FAIL: slot0 clear"); errors = errors + 1; end

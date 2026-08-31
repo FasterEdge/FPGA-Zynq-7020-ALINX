@@ -116,9 +116,13 @@ extern "C" void fe_hmac_sha256(const uint8_t *key, uint32_t key_len,
     // inner = SHA256(ipad || msg)：流式拼接
     // （消息较短，直接复制到 64+MSG 缓冲，避免实现增量接口）
     uint8_t buf[64 + 128];
+    const uint32_t bounded_msg_len = msg_len > 128u ? 128u : msg_len;
     for (int i = 0; i < 64; i++) buf[i] = ipad[i];
-    for (uint32_t i = 0; i < msg_len && i < 128; i++) buf[64 + i] = msg[i];
-    fe_sha256(buf, 64 + msg_len, inner);
+    for (uint32_t i = 0; i < bounded_msg_len; i++) buf[64 + i] = msg[i];
+    // The HLS interface intentionally supports at most 128 message bytes.
+    // Hash the bounded length as well as copying the bounded length; using
+    // msg_len here would make fe_sha256 read beyond buf for oversized input.
+    fe_sha256(buf, 64 + bounded_msg_len, inner);
     // outer = SHA256(opad || inner)
     uint8_t obuf[96];
     for (int i = 0; i < 64; i++) obuf[i] = opad[i];

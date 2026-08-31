@@ -47,45 +47,62 @@ module fe_axi_config_kv #(
     initial for (i = 0; i < TOTAL_WORDS; i = i + 1) mem[i] = 32'h0;
 
     // ------------------------------------------------------------
-    // 写事务：aw/w 都 valid 且 ready 时提交（AXI4-Lite 常见的双 ready 汇合）
+    // 写事务。AXI4-Lite 的 AW 与 W 是独立通道，可能在不同周期到达；
+    // 分别锁存后再提交，避免只接受“同周期 AWVALID+WVALID”的隐性死锁。
     // ------------------------------------------------------------
+    reg  [11:0] awaddr_q;
+    reg  [31:0] wdata_q;
+    reg  [3:0]  wstrb_q;
+    reg         aw_pending;
+    reg         w_pending;
+
     wire aw_hs = s_axi_awvalid && s_axi_awready;
     wire w_hs  = s_axi_wvalid  && s_axi_wready;
+    wire have_aw = aw_pending || aw_hs;
+    wire have_w  = w_pending  || w_hs;
+    wire [11:0] write_addr = aw_pending ? awaddr_q : s_axi_awaddr;
+    wire [31:0] write_data = w_pending  ? wdata_q  : s_axi_wdata;
+    wire [3:0]  write_strb = w_pending  ? wstrb_q  : s_axi_wstrb;
 
-    reg  [11:0] awaddr_q;
-    reg         doing_write;
+    always @(*) begin
+        s_axi_awready = s_axi_aresetn && !s_axi_bvalid && !aw_pending;
+        s_axi_wready  = s_axi_aresetn && !s_axi_bvalid && !w_pending;
+    end
 
     always @(posedge s_axi_aclk) begin
         if (!s_axi_aresetn) begin
-            s_axi_awready <= 1'b0;
-            s_axi_wready  <= 1'b0;
-            doing_write   <= 1'b0;
-            awaddr_q      <= 12'h0;
-            s_axi_bvalid  <= 1'b0;
-            s_axi_bresp   <= OKAY;
+            aw_pending  <= 1'b0;
+            w_pending   <= 1'b0;
+            awaddr_q    <= 12'h0;
+            wdata_q     <= 32'h0;
+            wstrb_q     <= 4'h0;
+            s_axi_bvalid <= 1'b0;
+            s_axi_bresp  <= OKAY;
         end else begin
-            s_axi_awready <= 1'b0;
-            s_axi_wready  <= 1'b0;
-            if (!doing_write && !s_axi_bvalid) begin
-                s_axi_awready <= 1'b1;
-                s_axi_wready  <= 1'b1;
-                if (aw_hs) awaddr_q <= s_axi_awaddr;
-                if (aw_hs && w_hs) begin
-                    doing_write <= 1'b1;
-                end
+            if (aw_hs) begin
+                awaddr_q   <= s_axi_awaddr;
+                aw_pending <= 1'b1;
             end
-            if (doing_write) begin
-                doing_write  <= 1'b0;
+            if (w_hs) begin
+                wdata_q   <= s_axi_wdata;
+                wstrb_q   <= s_axi_wstrb;
+                w_pending <= 1'b1;
+            end
+
+            if (!s_axi_bvalid && have_aw && have_w) begin
+                aw_pending   <= 1'b0;
+                w_pending    <= 1'b0;
                 s_axi_bvalid <= 1'b1;
                 s_axi_bresp  <= OKAY;
-                if (awaddr_q[11:2] < TOTAL_WORDS) begin
-                    if (s_axi_wstrb[0]) mem[awaddr_q[11:2]][7:0]   <= s_axi_wdata[7:0];
-                    if (s_axi_wstrb[1]) mem[awaddr_q[11:2]][15:8]  <= s_axi_wdata[15:8];
-                    if (s_axi_wstrb[2]) mem[awaddr_q[11:2]][23:16] <= s_axi_wdata[23:16];
-                    if (s_axi_wstrb[3]) mem[awaddr_q[11:2]][31:24] <= s_axi_wdata[31:24];
+                if (write_addr[11:2] < TOTAL_WORDS) begin
+                    if (write_strb[0]) mem[write_addr[11:2]][7:0]   <= write_data[7:0];
+                    if (write_strb[1]) mem[write_addr[11:2]][15:8]  <= write_data[15:8];
+                    if (write_strb[2]) mem[write_addr[11:2]][23:16] <= write_data[23:16];
+                    if (write_strb[3]) mem[write_addr[11:2]][31:24] <= write_data[31:24];
                 end
+            end else if (s_axi_bvalid && s_axi_bready) begin
+                s_axi_bvalid <= 1'b0;
             end
-            if (s_axi_bvalid && s_axi_bready) s_axi_bvalid <= 1'b0;
         end
     end
 
