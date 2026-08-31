@@ -1,3 +1,7 @@
+/* FasterEdge 开源项目
+ * GitHub: https://github.com/FasterEdge
+ * Gitee:  https://gitee.com/FasterEdge
+ */
 // fe_port.c — FasterEdge FPGA 平台移植层实现（MicroBlaze 软核版）
 // 目标环境：Zynq-7020 PL 中的 MicroBlaze（vivado/ 工程例化），
 // 通过 AXI4-Lite 挂载 AXI UART Lite（控制台）与 AXI Timer（时间）。
