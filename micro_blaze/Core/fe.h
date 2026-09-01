@@ -1,3 +1,8 @@
+// ─────────────────────────────────────────────────────────────
+// FasterEdge 开源项目
+// Github: https://github.com/FasterEdge
+// Gitee:  https://gitee.com/FasterEdge
+// ─────────────────────────────────────────────────────────────
 // fe.h — FasterEdge MCU 核心框架（Keil/裸机 C 版）
 // 纯 C 实现，不依赖 Arduino/RTOS；平台相关操作通过 fe_port.h 抽象，
 // 可在任意 Cortex-M / Xtensa 工具链（Keil MDK / GCC）下编译。

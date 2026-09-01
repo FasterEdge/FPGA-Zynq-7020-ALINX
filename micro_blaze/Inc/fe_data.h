@@ -1,3 +1,8 @@
+// ─────────────────────────────────────────────────────────────
+// FasterEdge 开源项目
+// Github: https://github.com/FasterEdge
+// Gitee:  https://gitee.com/FasterEdge
+// ─────────────────────────────────────────────────────────────
 // fe_data.h — FasterEdge MCU Data 模块声明（Keil/裸机 C 版）
 // Base / Config / Keyring / NetMap
 #ifndef FE_DATA_H

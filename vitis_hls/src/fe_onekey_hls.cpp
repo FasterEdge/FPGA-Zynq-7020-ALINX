@@ -1,3 +1,8 @@
+// ─────────────────────────────────────────────────────────────
+// FasterEdge 开源项目
+// Github: https://github.com/FasterEdge
+// Gitee:  https://gitee.com/FasterEdge
+// ─────────────────────────────────────────────────────────────
 // fe_onekey_hls.cpp — FasterEdge Vitis HLS 版 OneKeyAbility 核心算法
 // 令牌 = base64url(HMAC-SHA256(secret, "seq:subject"))，与 MCU 版
 // ability_onekey.c 完全同构（seq 十进制 + ':' + subject）。
