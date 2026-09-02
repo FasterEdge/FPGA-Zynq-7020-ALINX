@@ -1,3 +1,4 @@
+// FasterEdge 开源项目 - Github: https://github.com/FasterEdge - Gitee: https://gitee.com/FasterEdge
 // ability_time.c — TimeAbility 实现（Keil/裸机 C 版）
 // configure_run 保存周期校时配置；实际调度器可读取该状态后调用 sync_ntp。
 #include "fe_ability.h"

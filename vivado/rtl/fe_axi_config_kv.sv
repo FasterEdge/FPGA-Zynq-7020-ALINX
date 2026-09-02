@@ -1,3 +1,4 @@
+// FasterEdge 开源项目 - Github: https://github.com/FasterEdge - Gitee: https://gitee.com/FasterEdge
 // fe_axi_config_kv.sv — FasterEdge PL 侧 KV 配置存储（AXI4-Lite 从属）
 // 16 个槽位，每槽 64B = 16 个 32 位字：
 //   word 0     : key 哈希（0 = 空槽；哈希算法 FNV-1a，与 micro_blaze/User/fe_port.c 一致）

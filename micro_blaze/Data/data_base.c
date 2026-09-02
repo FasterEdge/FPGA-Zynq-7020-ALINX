@@ -1,3 +1,4 @@
+// FasterEdge 开源项目 - Github: https://github.com/FasterEdge - Gitee: https://gitee.com/FasterEdge
 // data_base.c — BaseData 实现（Keil/裸机 C 版）
 // logo / info
 #include "fe_data.h"

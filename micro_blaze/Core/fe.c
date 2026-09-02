@@ -1,3 +1,4 @@
+// FasterEdge 开源项目 - Github: https://github.com/FasterEdge - Gitee: https://gitee.com/FasterEdge
 // fe.c — FasterEdge MCU 核心框架实现（Keil/裸机 C 版）
 #include "fe.h"
 

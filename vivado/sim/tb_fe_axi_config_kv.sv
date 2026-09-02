@@ -1,3 +1,4 @@
+// FasterEdge 开源项目 - Github: https://github.com/FasterEdge - Gitee: https://gitee.com/FasterEdge
 // tb_fe_axi_config_kv.sv — fe_axi_config_kv 自校验仿真
 // 用 iverilog 运行：
 //   iverilog -g2012 -o tb.vvp sim/tb_fe_axi_config_kv.sv rtl/fe_axi_config_kv.sv

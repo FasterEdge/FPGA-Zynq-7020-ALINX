@@ -1,3 +1,4 @@
+# FasterEdge 开源项目 - Github: https://github.com/FasterEdge - Gitee: https://gitee.com/FasterEdge
 # run_hls.tcl — Vitis HLS 脚本：OneKey（HMAC-SHA256）加速核
 # 用法：
 #   cd vitis_hls/scripts

@@ -1,3 +1,4 @@
+# FasterEdge 开源项目 - Github: https://github.com/FasterEdge - Gitee: https://gitee.com/FasterEdge
 # AX7020.xdc — ALINX AX7020 (Zynq-7020 CLG484) 引脚约束
 # 本工程 PL 侧仅 KV 存储（纯 AXI），常规使用无需 PL 引脚。
 # 若需要 PL 侧调试 LED/按键，请参照 ALINX 官方工程模板（ALINX 开源资料

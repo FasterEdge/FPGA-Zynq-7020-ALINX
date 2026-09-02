@@ -1,3 +1,4 @@
+// FasterEdge 开源项目 - Github: https://github.com/FasterEdge - Gitee: https://gitee.com/FasterEdge
 // fe_ability.h — FasterEdge MCU Ability 模块声明（Keil/裸机 C 版）
 // 与 Arduino 版能力子集一致：Base / Role / Time / OneKey /
 // ConfigFile / Serial / MQTT / Modbus / EdgeRole

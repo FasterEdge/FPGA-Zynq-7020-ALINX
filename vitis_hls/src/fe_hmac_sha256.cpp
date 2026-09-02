@@ -1,3 +1,4 @@
+// FasterEdge 开源项目 - Github: https://github.com/FasterEdge - Gitee: https://gitee.com/FasterEdge
 // fe_hmac_sha256.cpp — FasterEdge Vitis HLS 版 SHA-256 / HMAC-SHA256
 // 纯 C++（无动态内存、无递归），兼容 Vitis HLS 综合与本机 g++ 编译。
 // 与 micro_blaze/User/fe_hmac_sha256.c 语义一致，便于交叉验证。

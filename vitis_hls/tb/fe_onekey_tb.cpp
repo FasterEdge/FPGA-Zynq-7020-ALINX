@@ -1,3 +1,4 @@
+// FasterEdge 开源项目 - Github: https://github.com/FasterEdge - Gitee: https://gitee.com/FasterEdge
 // fe_onekey_tb.cpp — HLS OneKey / HMAC 自校验测试
 // 向量来源：RFC 4231（HMAC-SHA256 测试向量 TC1 / TC2）
 // 运行（本机 / csim 通用）：g++ -std=c++11 -I src tb/fe_onekey_tb.cpp \

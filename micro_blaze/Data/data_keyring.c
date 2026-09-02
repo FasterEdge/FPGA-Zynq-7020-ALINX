@@ -1,3 +1,4 @@
+// FasterEdge 开源项目 - Github: https://github.com/FasterEdge - Gitee: https://gitee.com/FasterEdge
 // data_keyring.c — persistent shared secret and bounded active-token registry.
 #include "fe_data.h"
 #include "fe_hmac_sha256.h"

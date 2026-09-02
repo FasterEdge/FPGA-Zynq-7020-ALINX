@@ -1,3 +1,4 @@
+// FasterEdge 开源项目 - Github: https://github.com/FasterEdge - Gitee: https://gitee.com/FasterEdge
 // fe_port.h — FasterEdge FPGA 平台移植层（MicroBlaze 软核版）
 // 平台相关能力在此抽象：串口收发、NVS 存储、系统时间、随机数。
 // MicroBlaze 运行于 Zynq-7020 PL，通过 AXI 总线挂载外设：

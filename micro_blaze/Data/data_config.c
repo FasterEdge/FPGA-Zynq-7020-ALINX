@@ -1,3 +1,4 @@
+// FasterEdge 开源项目 - Github: https://github.com/FasterEdge - Gitee: https://gitee.com/FasterEdge
 // data_config.c — ConfigData 实现（Keil/裸机 C 版）
 // 扁平点号路径 KV 配置：get / set / delete / list / snapshot
 // 使用保留键 __keys 维护可移植索引，不依赖特定 SDK 的 NVS 枚举 API。

@@ -1,3 +1,4 @@
+// FasterEdge 开源项目 - Github: https://github.com/FasterEdge - Gitee: https://gitee.com/FasterEdge
 // fe_onekey_hls.h — OneKeyAbility HLS 加速核接口
 #ifndef FE_ONEKEY_HLS_H
 #define FE_ONEKEY_HLS_H

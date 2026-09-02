@@ -1,4 +1,5 @@
 #!/bin/sh
+# FasterEdge 开源项目 - Github: https://github.com/FasterEdge - Gitee: https://gitee.com/FasterEdge
 # build.sh — 用开源工具链（Yosys）对 PL 侧 RTL 做综合检查
 # 用法：sh scripts/build.sh
 # 说明：开源流程（Yosys synth_xilinx / 未来的 nextpnr-xilinx）不支持

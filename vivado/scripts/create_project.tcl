@@ -1,3 +1,4 @@
+# FasterEdge 开源项目 - Github: https://github.com/FasterEdge - Gitee: https://gitee.com/FasterEdge
 # create_project.tcl — 生成 FPGA-Zynq-7020-ALINX Vivado 工程（ALINX AX7020）
 # 用法：
 #   cd vivado/scripts
