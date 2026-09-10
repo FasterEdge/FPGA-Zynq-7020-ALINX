@@ -1,0 +1,25 @@
+# FasterEdge 开源项目 - Github: https://github.com/FasterEdge - Gitee: https://gitee.com/FasterEdge
+# C 代码 CI: gcc 语法检查(-Wall -Wextra, 不链接, 不依赖嵌入式工具链)。
+name: 'C 代码检查(gcc)'
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  gcc-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: 'gcc 语法检查 micro_blaze'
+        working-directory: micro_blaze
+        run: |
+          set -e
+          for f in $(find . -name '*.c' | sort); do
+            gcc -fsyntax-only -Wall -Wextra -I Ability -I Core -I Data -I Inc -I User "$f"
+            echo "  OK: $f"
+          done
