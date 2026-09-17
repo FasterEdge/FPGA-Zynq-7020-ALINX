@@ -58,18 +58,30 @@ set_property -dict [list C_COUNT_WIDTH {32} C_CASCADE_MODE {1}] $timer
 # PL KV 存储（模块引用，来自 rtl/fe_axi_config_kv.sv）
 set kv [create_bd_cell -type module -reference fe_axi_config_kv fe_axi_config_kv_0]
 
-# 连接：UART Lite + Timer + KV 都挂到 PS 的 M_AXI_GP0
-connect_bd_intf_net [get_bd_intf_pins ps7/M_AXI_GP0] [get_bd_intf_pins axi_uartlite_0/s_axi]
-connect_bd_intf_net [get_bd_intf_pins ps7/M_AXI_GP0] [get_bd_intf_pins axi_timer_0/s_axi]
-connect_bd_intf_net [get_bd_intf_pins ps7/M_AXI_GP0] [get_bd_intf_pins fe_axi_config_kv_0/s_axi]
+# 连接: 创建 AXI Interconnect(1 主 3 从)。PS M_AXI_GP0 为单一主口, 不能直接
+# 扇出到 3 个从机(会重复 connect 报错且 validate 失败), 须经 interconnect 路由。
+set interconnect [create_bd_cell -type ip -vlnv xilinx.com:ip:axi_interconnect:2.1 axi_interconnect_0]
+set_property -dict [list CONFIG.NUM_MI {3}] $interconnect
+connect_bd_intf_net [get_bd_intf_pins ps7/M_AXI_GP0] [get_bd_intf_pins axi_interconnect_0/S00_AXI]
+connect_bd_intf_net [get_bd_intf_pins axi_interconnect_0/M00_AXI] [get_bd_intf_pins axi_uartlite_0/s_axi]
+connect_bd_intf_net [get_bd_intf_pins axi_interconnect_0/M01_AXI] [get_bd_intf_pins axi_timer_0/s_axi]
+connect_bd_intf_net [get_bd_intf_pins axi_interconnect_0/M02_AXI] [get_bd_intf_pins fe_axi_config_kv_0/s_axi]
 
-# 时钟与复位（PS FCLK_CLK0 100MHz 驱动 PL；外设复用同一时钟）
+# 时钟与复位（PS FCLK_CLK0 100MHz 驱动 PL；外设与 interconnect 复用同一时钟）
 connect_bd_net [get_bd_pins ps7/FCLK_CLK0] [get_bd_pins axi_uartlite_0/s_axi_aclk]
 connect_bd_net [get_bd_pins ps7/FCLK_CLK0] [get_bd_pins axi_timer_0/s_axi_aclk]
 connect_bd_net [get_bd_pins ps7/FCLK_CLK0] [get_bd_pins fe_axi_config_kv_0/s_axi_aclk]
+connect_bd_net [get_bd_pins ps7/FCLK_CLK0] [get_bd_pins axi_interconnect_0/S00_ACLK]
+connect_bd_net [get_bd_pins ps7/FCLK_CLK0] [get_bd_pins axi_interconnect_0/M00_ACLK]
+connect_bd_net [get_bd_pins ps7/FCLK_CLK0] [get_bd_pins axi_interconnect_0/M01_ACLK]
+connect_bd_net [get_bd_pins ps7/FCLK_CLK0] [get_bd_pins axi_interconnect_0/M02_ACLK]
 connect_bd_net [get_bd_pins ps7/FCLK_RESET0_N] [get_bd_pins axi_uartlite_0/s_axi_aresetn]
 connect_bd_net [get_bd_pins ps7/FCLK_RESET0_N] [get_bd_pins axi_timer_0/s_axi_aresetn]
 connect_bd_net [get_bd_pins ps7/FCLK_RESET0_N] [get_bd_pins fe_axi_config_kv_0/s_axi_aresetn]
+connect_bd_net [get_bd_pins ps7/FCLK_RESET0_N] [get_bd_pins axi_interconnect_0/S00_ARESETN]
+connect_bd_net [get_bd_pins ps7/FCLK_RESET0_N] [get_bd_pins axi_interconnect_0/M00_ARESETN]
+connect_bd_net [get_bd_pins ps7/FCLK_RESET0_N] [get_bd_pins axi_interconnect_0/M01_ARESETN]
+connect_bd_net [get_bd_pins ps7/FCLK_RESET0_N] [get_bd_pins axi_interconnect_0/M02_ARESETN]
 
 # 地址分配（与 micro_blaze/User/fe_port.c 默认宏一致）
 assign_bd_address -target_address_space /ps7/Data \
